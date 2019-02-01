@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="randist-tidues",
-    version="1.0.0",
+    name="randist",
+    version="1.0.1",
     author="Ningji Wei",
     author_email="tidues@gmail.com",
     description="Distance statistics for two random events on a network",

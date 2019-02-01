@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: randist
+Version: 1.0.1
+Summary: Distance statistics for two random events on a network
+Home-page: https://github.com/tidues/Distance-Distribution-of-Random-Events
+Author: Ningji Wei
+Author-email: tidues@gmail.com
+License: UNKNOWN
+Description: # Distance between Random Events
+        
+        This package is for symbolically and numerically calculating the arbitrary order moments, pdf, cdf and their conditional counterparts of the distance between two random events in a given graph.
+        
+        The details will be added soon.
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
