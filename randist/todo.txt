@@ -1,0 +1,6 @@
+Current tasks:
+8. create package, add readme
+
+Future functionalities:
+2. separate g_xy and phi_pq, allow changing them in a graph
+3. interactive interface
