@@ -11,7 +11,7 @@ setuptools.setup(
     description="Distance statistics for two random events on a network",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/tidues/Distance-Distribution-of-Random-Events",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
