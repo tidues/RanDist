@@ -5,10 +5,10 @@ This package is for symbolically and numerically calculating the arbitrary order
 
 ## Installation
 
-Use pip to install the randist package
-'''
+Use pip to install the randist package.
+```
 pip install randist
-'''
+```
 
 ## Inputs
 1. A data file whose rows are edges of the network with extra properties. There are five columns,
@@ -60,6 +60,7 @@ phi_pq = 36 * p * (1-p) * q * (1 - q)
 phi = rt.Phi('betapq', phi_pq=phi_pq)  # create a joint pdf with a name
 
 fls = rt.Formulas(gname, phi)                 # create a formulas object
+
 moment = fls.get_formula(rt.Stats.MOMENT)     # get a moment formula object
 cdf = fls.get_formula(rt.Stats.CDF)           # get a cdf formula object
 pdf = fls.get_formula(rt.Stats.PDF)           # get a cdf formula object
@@ -99,7 +100,7 @@ each parameter is explained below:
 get_formula(stats, symbolic=None)
 ```
 each parameter is explained below:
-1. stats: specify which type of formulas you want, all in the enum type Stats.
+1. stats: specify which type of formulas you want, all types are in the enum type Stats.
 2. symbolic: calculate values numerically or symbolically. The default value `None` means auto, so moments and conditional moments will be calculated numerically, and all the rest are calculated symbolically.
 
 #### Comparison between Numeric and Symbolic Formulas
@@ -107,12 +108,12 @@ each parameter is explained below:
 2. Symbolic formula object has two more methods that numerical formulas do not have, `formula()` which shows the closed-form formula for the corresponding statistics, and `save_formula()` that saves the generated formula into file, so that users can load it by the function `load_formulas` in the future without generating the formulas from scratch again.
 3. Symbolic formula is faster in plotting.
 4. One drawback is that the speed of symbolic formulas are getting much more slower when the size of the graph increase.
-5. Numeric formulas are fast in evaluating a single value. And perform plotting and evaluation much faster than symbolic formulas when graph is large.
+5. Numeric formulas are fast in evaluating a single value. And it performs much faster than symbolic formulas in both plotting and evaluation when graph is large.
 
-Basically, if the network is large, always use numeric formulas. Otherwise, use the default setting, especially if you want to load the formulas in the future.
+Basically, if the network is large, always use numeric formulas. Otherwise, please use the default setting, especially if you want to reuse the formulas in the future.
 
 ### Interface 2: `data_collector` Function
-Basically, the function `data_collector` is a wrapper of the `Formulas` class. We will demonstrate the usage by an example.
+Basically, the function `data_collector` is a wrapper of the `Formulas` class. We will demonstrate the usage with an example.
 
 #### Example
 

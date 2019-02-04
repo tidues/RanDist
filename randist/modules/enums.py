@@ -7,9 +7,9 @@ class Stats(Enum):
     CMOMENT = 4
     CCDF = 5
     CPDF = 6
-    SIMULATION = 7
-    TIMING = 8
-    SAVE = 9
+#    SIMULATION = 7
+#    TIMING = 8
+#    SAVE = 9
 
     @classmethod
     def is_member(cls, value):
