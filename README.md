@@ -1,6 +1,6 @@
 # Distance between Random Events
 
-This package is for symbolically and numerically calculating the arbitrary order moments, pdf, cdf and their conditional counterparts of the distance between two random events in a given graph. The position of an event in a network is encoded in a tuple ![alt text](https://latex.codecogs.com/gif.latex?(e, p)), where `e={u,v}` (assume `u < v`) is the edge where the event happens and `p` is the relative location of the event on that edge, that is the portion of the length from `u` to the location of the event.
+This package is for symbolically and numerically calculating the arbitrary order moments, pdf, cdf and their conditional counterparts of the distance between two random events in a given graph. The position of an event in a network is encoded in a tuple ![alt text](https://latex.codecogs.com/gif.latex?(e,\&space;p)), where `e={u,v}` (assume `u < v`) is the edge where the event happens and `p` is the relative location of the event on that edge, that is the portion of the length from `u` to the location of the event.
 
 
 ## Installation
