@@ -48,7 +48,9 @@ All these statistics can be computed either symbolically or numerically. We will
 User can achieve most tasks with two interfaces, `Formulas` and `data_collector`. The former gives the freedom of calculating statistics individually, where the latter can collect data in batch.
 
 ### Formulas Object
-There is an example of using formulas objects to compute statistics:
+
+#### Example
+An example of using formulas objects to compute statistics:
 ```
 from sympy.abc import p, q  # import symbols
 import randist as rt        # import our package
@@ -79,6 +81,7 @@ cpdf.eval(('2', '3'), 0.1, 3.5)       # same but with conditional pdf
 cpdf.plot(('2', '3'), 0.1)            # same but with conditional pdf
 ```
 
+#### The `Formulas` Class
 The `Formulas` class has the following parameters,
 ```
 Formulas(gname, phi, fpath='./data/', rational=False, d_jit=False, memorize=True)
@@ -91,5 +94,10 @@ each parameter is explained below:
 * d_jit: compute the shortest path length between pair of vertices in a `Just In Time` fashion. Set this to `True` if the input graph is very large and only conditional statistics are needed.
 * memorize: use memorization to speedup the computation. Set this to `False` only if the input graph is too large so that the memories in the computer are not enough.
 
-
-
+#### The `get_formula` Function
+```
+get_formula(stats, symbolic=None)
+```
+each parameter is explained below:
+1. stats: specify which type of formulas you want, all in the enum type Stats.
+2. symbolic: calculate values numerically or symbolically. The default value `None` means auto, so moments and conditional moments will be calculated numerically, and all the rest are calculated symbolically.
