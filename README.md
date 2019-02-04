@@ -17,3 +17,5 @@ pip install randist
    * `x`: the probability of event 1 happens on the current edge
    * `y`: the probability of event 2 happens on the current edge
 
+2. The joint distribution of the relative locations of two events given both edges where two events happen are fixed, `$\Phi_{P,Q}(p,q)$`
+
