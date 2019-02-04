@@ -79,11 +79,11 @@ cpdf.eval(('2', '3'), 0.1, 3.5)       # same but with conditional pdf
 cpdf.plot(('2', '3'), 0.1)            # same but with conditional pdf
 ```
 
-The `Formulas` class:
+The `Formulas` class has the following parameters,
 ```
 Formulas(gname, phi, fpath='./data/', rational=False, d_jit=False, memorize=True)
 ```
-input parameters are explained below:
+each parameter is explained below:
 * gname: data file name without the extension `.dat`
 * phi:   a Phi object for input joint distribution
 * fpath: the folder that includes the input data file
