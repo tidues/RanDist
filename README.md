@@ -47,7 +47,7 @@ All these statistics can be computed either symbolically or numerically. We will
 ## Main Interfaces
 User can achieve most tasks with two interfaces, `Formulas` and `data_collector`. The former gives the freedom of calculating statistics individually, where the latter can collect data in batch.
 
-### Formulas Object
+### Interface 1: `Formulas` Object
 
 #### Example
 An example of using formulas objects to compute statistics:
@@ -111,3 +111,32 @@ each parameter is explained below:
 
 Basically, if the network is large, always use numeric formulas. Otherwise, use the default setting, especially if you want to load the formulas in the future.
 
+### Interface 2: `data_collector` Function
+#### Example
+```
+from sympy.abc import p, q  # import symbols
+import randist as rt        # import our randist package
+
+gname = 'g0'                # input graph name
+phi = rt.Phi('uniform', 1)  # creating a input joint distribution
+
+ks = [1, 2, 3]              # list of orders for moments
+loc1 = (('1', '2'), 0.2)
+loc2 = (('1', '3'), 0.5)
+loc3 = (('3', '4'), 0)
+locs = [loc1, loc2, loc3]   # list of locations
+
+mmtp = {'collect': True, 'symbolic': None, 'valst': ks}          # params for moment
+cdfp = {'collect': True, 'symbolic': None}                       # params for cdf
+
+pdfp = {'collect': True, 'symbolic': None}                       # params for pdf
+cmmtp ={'collect': True, 'symbolic': None, 'valst': (ks, locs)}  # params for conditional moment
+ccdfp = {'collect': True, 'symbolic': None, 'valst': locs}       # params for conditional cdf
+cpdfp = {'collect': True, 'symbolic': False, 'valst': locs}      # params for conditional pdf
+
+d_jit = False     # whether compute pairwise shortest distance in a Just In Time fashion
+memorize = True   # whether use memorization to speedup the computation
+
+# collect all specified data and save them in the folder ./results
+rt.data_collector(gname, phi, mmtp, cdfp, pdfp, cmmtp, ccdfp, cpdfp, d_jit=d_jit, memorize=memorize)   
+```
