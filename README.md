@@ -12,11 +12,18 @@ pip install randist
 
 ## Inputs
 1. A data file whose rows are edges of the network with extra properties. There are five columns,
-   * `i`: start vertex of the edge
-   * `j`: end vertex of the edge
+   * `i`: first vertex of the edge
+   * `j`: second vertex of the edge
    * `l`: length of the current edge
    * `x`: the probability of event 1 happens on the current edge
    * `y`: the probability of event 2 happens on the current edge
 
-2. The joint distribution of the relative locations of two events given both edges where two events happen are fixed, ![alt text](https://latex.codecogs.com/gif.latex?\Phi_\scriptscriptstyle{P,Q}(p,q))
+2. The joint distribution of the relative locations of two events, ![alt text](https://latex.codecogs.com/gif.latex?\Phi_\scriptscriptstyle{P,Q}(p,q)). This should be provided as a sympy expression,
+```
+from sympy.abc import p, q  # import symbols
+
+phi_pq = 1  # uniform distribution
+phi_pq = 36 * p * (1 - p) * q * (1 - q)  # both are beta function with parameters alpha = beta = 2
+
+```
 
