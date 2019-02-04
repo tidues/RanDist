@@ -11,9 +11,9 @@ pip install randist
 
 ## Inputs
 1. A data file with five columns, where each row is an edges with certain properties
-..* `i`: start vertex of the edge
-..* `j`: end vertex of the edge
-..* `l`: length of the current edge
-..* `x`: the probability of event 1 happens on the current edge
-..* `y`: the probability of event 2 happens on the current edge
+  * `i`: start vertex of the edge
+  * `j`: end vertex of the edge
+  * `l`: length of the current edge
+  * `x`: the probability of event 1 happens on the current edge
+  * `y`: the probability of event 2 happens on the current edge
 
