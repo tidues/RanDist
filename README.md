@@ -101,3 +101,13 @@ get_formula(stats, symbolic=None)
 each parameter is explained below:
 1. stats: specify which type of formulas you want, all in the enum type Stats.
 2. symbolic: calculate values numerically or symbolically. The default value `None` means auto, so moments and conditional moments will be calculated numerically, and all the rest are calculated symbolically.
+
+#### Comparison between Numeric and Symbolic Formulas
+1. Symbolic formula object is slow in generating the formula, but fast in evaluating values once the formula has been generated.
+2. Symbolic formula object has two more methods that numerical formulas do not have, `formula()` which shows the closed-form formula for the corresponding statistics, and `save_formula()` that saves the generated formula into file, so that users can load it by the function `load_formulas` in the future without generating the formulas from scratch again.
+3. Symbolic formula is faster in plotting.
+4. One drawback is that the speed of symbolic formulas are getting much more slower when the size of the graph increase.
+5. Numeric formulas are fast in evaluating a single value. And perform plotting and evaluation much faster than symbolic formulas when graph is large.
+
+Basically, if the network is large, always use numeric formulas. Otherwise, use the default setting, especially if you want to load the formulas in the future.
+
