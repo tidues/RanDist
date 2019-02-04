@@ -29,7 +29,9 @@ phi_pq = 36 * p * (1 - p) * q * (1 - q)  # both are beta functions with paramete
 phi = rt.Phi('betapq', phi_pq=phi_pq)  # create a Phi object with a name
 
 ```
-In current implementation, the random variables `X` and `Y` are assumed to be independent, but the formulas we developed do not have this restriction. Also, currently, we assume the joint pdf ![alt text](https://latex.codecogs.com/gif.latex?\Phi_\scriptscriptstyle{P,Q}(p,q)) are same for all pair of edges `(e, f)`, but the formulas in our paper do not have this restriction. We may relax both restrictions in the future version.
+In current implementation, the random variables `X` and `Y` are assumed to be independent, but the formulas we developed in our paper do not have this restriction. Also, currently, we assume the joint pdf ![alt text](https://latex.codecogs.com/gif.latex?\Phi_\scriptscriptstyle{P,Q}(p,q)) are same for all pair of edges `(e, f)`, but the formulas in our paper do not have this restriction. We may relax both restrictions in the future version.
+
+Also notice the input joint distribution `phi_pq` does not have to be correct outside of the domain `[0, 1]^2` the unit square in the `pq`-plane (all values should be zero outside this domain). Our package will verify whether the input expression integral to `1` in its domain, but will not verify the non-negative requirement.
 
 ## Outputs
 Several statistics about the random distance `D` between two events:
@@ -46,7 +48,7 @@ All these statistics can be computed either symbolically or numerically. We will
 User can achieve most tasks with two interfaces, `Formulas` and `data_collector`. The former gives the freedom of calculating statistics individually, where the latter can collect data in batch.
 
 ### Formulas Object
-There is an example of using formulas objects to compute:
+There is an example of using formulas objects to compute statistics:
 ```
 from sympy.abc import p, q  # import symbols
 import randist as rt        # import our package
@@ -70,12 +72,24 @@ cdf.plot(show=True)                   # save the plot in the ./results folder an
 pdf.eval(8.1)                         # evaluate the pdf at the point x = 9.5
 pdf.plot()                            # save the plot in the ./results folder without showing
 cmoment.eval(1, ('1', '2'), 0.5)      # the conditional expectation given (e, p) = (('1', '2'), 0.5)
-cmoment.plot(1, ('1', '2'))           # plot the conditional expectation against the value of p
+cmoment.plot(2, ('1', '2'))           # plot the conditional 2nd moment against the value of p
 ccdf.eval(('2', '3'), 0.1, 3.5)       # evaluate the conditional cdf at x = 3.5 given (e, p) = (('2', '3'), 0.1)
 ccdf.plot(('2', '3'), 0.1)            # plot the conditional cdf given (e, p) = (('2', '3'), 0.1)
 cpdf.eval(('2', '3'), 0.1, 3.5)       # same but with conditional pdf
 cpdf.plot(('2', '3'), 0.1)            # same but with conditional pdf
 ```
+
+The `Formulas` class:
+```
+Formulas(gname, phi, fpath='./data/', rational=False, d_jit=False, memorize=True)
+```
+input parameters are explained below:
+* gname: data file name without the extension `.dat`
+* phi:   a Phi object for input joint distribution
+* fpath: the folder that includes the input data file
+* rational: if `True`, all value are computed in the rational form (slow)
+* d_jit: compute the shortest path length between pair of vertices in a `Just In Time` fashion. Set this to `True` if the input graph is very large and only conditional statistics are needed.
+* memorize: use memorization to speedup the computation. Set this to `False` only if the input graph is too large so that the memories in the computer are not enough.
 
 
 
