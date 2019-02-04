@@ -84,9 +84,9 @@ The `Formulas` class has the following parameters,
 Formulas(gname, phi, fpath='./data/', rational=False, d_jit=False, memorize=True)
 ```
 each parameter is explained below:
-* gname: data file name without the extension `.dat`
-* phi:   a Phi object for input joint distribution
-* fpath: the folder that includes the input data file
+* gname:    data file name without the extension `.dat`
+* phi:      a Phi object for input joint distribution
+* fpath:    the folder where you put the input data file
 * rational: if `True`, all value are computed in the rational form (slow)
 * d_jit: compute the shortest path length between pair of vertices in a `Just In Time` fashion. Set this to `True` if the input graph is very large and only conditional statistics are needed.
 * memorize: use memorization to speedup the computation. Set this to `False` only if the input graph is too large so that the memories in the computer are not enough.
