@@ -112,7 +112,10 @@ each parameter is explained below:
 Basically, if the network is large, always use numeric formulas. Otherwise, use the default setting, especially if you want to load the formulas in the future.
 
 ### Interface 2: `data_collector` Function
+Basically, the function `data_collector` is a wrapper of the `Formulas` class. We will demonstrate the usage by an example.
+
 #### Example
+
 ```
 from sympy.abc import p, q  # import symbols
 import randist as rt        # import our randist package
@@ -140,3 +143,7 @@ memorize = True   # whether use memorization to speedup the computation
 # collect all specified data and save them in the folder ./results
 rt.data_collector(gname, phi, mmtp, cdfp, pdfp, cmmtp, ccdfp, cpdfp, d_jit=d_jit, memorize=memorize)   
 ```
+
+## Future Plan
+1. Remove the current restrictions mentioned before about `X` and `Y`, and ![alt text](https://latex.codecogs.com/gif.latex?\Phi_\scriptscriptstyle{P,Q}(p,q)).
+2. Interactive user interface.
