@@ -76,6 +76,8 @@ class Formula:
 
     def memo_dict(self):
         self.dict_coeff = {}
+        self.dict_prob = {}
+        self.dict_ef_entry = {}
 
     def cond_ep(self, g, k, e, p_val, x_val, alphas, prog):
         res = 0
@@ -89,22 +91,85 @@ class Formula:
             # get f related info
             lf = float(g.edges[f]['l'])
             py = float(g.edges[f]['y'])
-            # get entry ef related info
-            d, p1, p2, q1, q2 = memorize(self.g.dict_entry, (e, f), bi.entry_info,(self.g, e, f, le, lf), on=self.memo)
-            #d, p1, p2, q1, q2 = bi.entry_info(self.g, e, f, le, lf)
 
             # get entry coeff
-            coeff = memorize(self.dict_coeff, (e, f), self.ef_coeff, (px, py, lf), on=self.memo)
-            #coeff = self.ef_coeff(px, py, lf)
-            ef_res = 0
+            prob = memorize(self.dict_prob, (e, f), self.ef_prob, (px, py), on=self.memo)
 
-            for (i, j) in g.two2:
-                # get region related info
-                R = self.get_R(g, e, f, i, j, le, lf, d, p1, p2, q1, q2, x_val)
-                ef_res += self.region_op(g, e, f, i, j, le, lf, px, py, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas)
+            ef_res = self.ef_entry_val_help(g, k , e, f, p_val, x_val, alphas, le, lf)
+#            # get entry ef related info
+#            d, p1, p2, q1, q2 = memorize(self.g.dict_entry, (e, f), bi.entry_info,(self.g, e, f, le, lf), on=self.memo)
+#            #d, p1, p2, q1, q2 = bi.entry_info(self.g, e, f, le, lf)
+#
+#            # get entry coeff
+#            coeff1, coeff2 = memorize(self.dict_coeff, (e, f), self.ef_coeff, (px, py, lf), on=self.memo)
+#
+#            ef_res = 0
+#
+#            for (i, j) in g.two2:
+#                # get region related info
+#                R = self.get_R(g, e, f, i, j, le, lf, d, p1, p2, q1, q2, x_val)
+#                ef_res += self.region_op(g, e, f, i, j, le, lf, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas)
 
-            res += coeff * ef_res
+            res += prob * ef_res
         return res
+
+
+    def ef_entry_val_help(self, g, k, e, f, p_val, x_val, alphas, le, lf):
+
+        # get entry ef related info
+        d, p1, p2, q1, q2 = memorize(self.g.dict_entry, (e, f), bi.entry_info,(self.g, e, f, le, lf), on=self.memo)
+
+        # get entry coeff
+        coeff = memorize(self.dict_coeff, (e, f), self.ef_coeff, (lf,), on=self.memo)
+
+        ef_res = 0
+
+        for (i, j) in g.two2:
+            # get region related info
+            R = self.get_R(g, e, f, i, j, le, lf, d, p1, p2, q1, q2, x_val)
+            ef_res += self.region_op(g, e, f, i, j, le, lf, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas)
+
+        return coeff * ef_res
+
+
+    def ef_entry_val(self, e, f, k=None, p_val=None, x_val=None):
+        # generate extra params
+        alphas = None
+        if self.stat == Stats.MOMENT or self.stat == Stats.CMOMENT:
+            alphas = cf.A_curl(2, k)
+
+        # get e related info
+        le = float(g.edges[e]['l'])
+
+        # get f related info
+        lf = float(g.edges[f]['l'])
+
+        ef_res = self.ef_entry_val_help(self.g, k , e, f, p_val, x_val, alphas, le, lf)
+
+        return ef_res
+
+    def ef_entry_memo(self, e, f, k=None, p_val=None, x_val=None):
+        return memorize(self.dict_ef_entry, (e, f), self.ef_entry_val, (e, f, k, p_val, x_val), on=self.memo)
+
+    def X_coeff(self, k=None, p_val=None, x_val=None):
+        coeff = {}
+        for e in self.g.edges():
+            val = 0
+            for f in self.g.edges():
+                py = float(g.edges[f]['y'])
+                val += py * self.ef_entry_memo(e, f, k, p_val, x_val)
+            coeff[e] = val
+        return coeff
+
+    def Y_coeff(self, k=None, p_val=None, x_val=None):
+        coeff = {}
+        for f in self.g.edges():
+            val = 0
+            for e in self.g.edges():
+                px = float(g.edges[e]['x'])
+                val += px * self.ef_entry_memo(e, f, k, p_val, x_val)
+            coeff[f] = val
+        return coeff
 
     def cond_region(self, k=None, e=None, p_val=None, x_val=None, show=True):
         # generate extra params
@@ -137,15 +202,31 @@ class Formula:
         if self.stat == Stats.MOMENT:
             coeff = 1
         elif self.stat == Stats.CDF:
-            coeff = px * py
+            coeff = 1
         elif self.stat == Stats.PDF:
-            coeff = px * py / lf
+            coeff = 1 / lf
         elif self.stat == Stats.CMOMENT:
             coeff = 1
         elif self.stat == Stats.CCDF:
+            coeff = 1
+        elif self.stat == Stats.CPDF:
+            coeff = 1 / lf
+        return coeff
+
+    # combine results in e,f level
+    def ef_prob(self, px, py):
+        if self.stat == Stats.MOMENT:
+            coeff = px * py
+        elif self.stat == Stats.CDF:
+            coeff = px * py
+        elif self.stat == Stats.PDF:
+            coeff = px * py
+        elif self.stat == Stats.CMOMENT:
+            coeff = py
+        elif self.stat == Stats.CCDF:
             coeff = py
         elif self.stat == Stats.CPDF:
-            coeff = py / lf
+            coeff = py
         return coeff
 
     # save result when evaluate
@@ -232,8 +313,8 @@ class Moment(Formula):
             func = lambda q, p: q ** alpha[0] * p ** alpha[1] * g.phi_pq(q, p)
         return func
 
-    def get_const(self, g, e, f, i, j, le, lf, px, py, R, alpha):
-        c0 = px * py * lf ** alpha[0] * le ** alpha[1]
+    def get_const(self, g, e, f, i, j, le, lf, R, alpha):
+        c0 = lf ** alpha[0] * le ** alpha[1]
         if e == f:
             w = (i + j + 1) * alpha[0] + (i + j + 2) * alpha[1]
             c1 = (-1) ** w 
@@ -247,28 +328,15 @@ class Moment(Formula):
         return c * m
 
 
-    def region_op(self, g, e, f, i, j, le, lf, px, py, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas):
+    def region_op(self, g, e, f, i, j, le, lf, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas):
         res = 0
         # get alpha related info
         for alpha in alphas:
-            #if (e, f, i, j, alpha) not in g.moment_info:
-            #c0 = px * py * lf ** alpha[0] * le ** alpha[1]
-            #if e == f:
-            #    w = (i + j + 1) * alpha[0] + (i + j + 2) * alpha[1]
-            #    c1 = (-1) ** w 
-            #else:
-            #    w = j * alpha[0] + i * alpha[1]
-            #    c1 = (-1) ** w 
-            #c = c0 * c1
-            #func = self.get_func(g, alpha)
-
-            #m = R.m(func)
-
             const = memorize(
                     self.moment_info, 
                     (e, f, i, j, alpha), 
                     self.get_const, 
-                    (g, e, f, i, j, le, lf, px, py, R, alpha),
+                    (g, e, f, i, j, le, lf, R, alpha),
                     on=self.memo
                     )
 
@@ -291,7 +359,7 @@ class CDF(Formula):
         self.sym_num_env(symbolic)
         self.stop_val = 1
 
-    def region_op(self, g, e, f, i, j, le, lf, px, py, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas):
+    def region_op(self, g, e, f, i, j, le, lf, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas):
         return R.m(g.phi_pq)
 
 
@@ -313,7 +381,7 @@ class PDF(Formula):
             func = lambda p: g.phi_pq(q_func(p), p)
         return func
 
-    def region_op(self, g, e, f, i, j, le, lf, px, py, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas):
+    def region_op(self, g, e, f, i, j, le, lf, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas):
         c = self.eta(R.a_val, R.b_val, x_val)
         L = self.get_L(g, e, f, i, j, le, lf, d, p1, p2, q1, q2, x_val)
         q_func = self.get_q(g, e, f, i, j, le, lf, d, p1, p2, q1, q2, x_val)
@@ -342,10 +410,10 @@ class CMoment(Formula):
             func = lambda q: q ** alpha[0] * g.phi_qcp(q, p_val)
         return func
 
-    def region_op(self, g, e, f, i, j, le, lf, px, py, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas):
+    def region_op(self, g, e, f, i, j, le, lf, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas):
         res = 0
         for alpha in alphas:
-            c0 = cf.ncrs(k, alpha) * py * lf ** alpha[0] * le ** alpha[1]
+            c0 = cf.ncrs(k, alpha) * lf ** alpha[0] * le ** alpha[1]
             if e == f:
                 w = (i + j + 1) * alpha[0] + (i + j + 2) * alpha[1]
                 c1 = (-1) ** w * (i * (d + le)) ** (k - alpha[0] - alpha[1])
@@ -381,7 +449,7 @@ class CCDF(Formula):
             func = lambda q: g.phi_qcp(q, p_val)
         return func
 
-    def region_op(self, g, e, f, i, j, le, lf, px, py, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas):
+    def region_op(self, g, e, f, i, j, le, lf, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas):
         func = self.get_func(g, p_val)
         return R.m_p(func, p_val)
 
@@ -404,7 +472,7 @@ class CPDF(Formula):
             func = g.phi_qcp(q_func(p_val), p_val)
         return func
 
-    def region_op(self, g, e, f, i, j, le, lf, px, py, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas):
+    def region_op(self, g, e, f, i, j, le, lf, d, p1, p2, q1, q2, R, p_val, x_val, k, alphas):
         c0 = self.eta(R.a_val, R.b_val, x_val)
         L = self.get_L(g, e, f, i, j, le, lf, d, p1, p2, q1, q2, x_val)
         q_func = self.get_q(g, e, f, i, j, le, lf, d, p1, p2, q1, q2, x_val)
@@ -598,7 +666,7 @@ class Symbolic:
 # the wrapper for getting formulas
 class Formulas:
     # symbolic: use symbolic or numerical method, None is same as auto
-    def __init__(self, gname, phi, fpath='../data/', rational=False, d_jit=False, memorize=True):
+    def __init__(self, gname, phi, fpath='./data/', rational=False, d_jit=False, memorize=True):
         self.d_jit = d_jit
         self.memo = memorize
         # read graph
