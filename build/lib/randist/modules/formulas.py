@@ -27,6 +27,7 @@ class Formula:
         self.plot_info = [None, x, -0.1, None]  # plotting parameters
         self.memo = memorize
         self.memo_dict()
+        self.mods = ['numpy', {'theta': nf.theta, 'eta': nf.eta, 'etal': nf.etal, 'etar': nf.etar, 'mmin': min, 'mmax': max}]  ## modules for lambdify
 
     # set up the symbolic or numeric environment
     def sym_num_env(self, symbolic):
@@ -53,7 +54,6 @@ class Formula:
             self.fs = {} # all formulas
             self.N_fs = {} # all numeric formulas
             self.unikey = 'zero'
-            self.mods = ['numpy', {'theta': nf.theta, 'eta': nf.eta, 'etal': nf.etal, 'etar': nf.etar, 'mmin': min, 'mmax': max}]  ## modules for lambdify
             self.folder = './.formulas/'
             self.mksvname()
 
@@ -133,6 +133,7 @@ class Formula:
 
 
     def ef_entry_val(self, e, f, k=None, p_val=None, x_val=None):
+        g = self.g
         # generate extra params
         alphas = None
         if self.stat == Stats.MOMENT or self.stat == Stats.CMOMENT:
@@ -148,27 +149,47 @@ class Formula:
 
         return ef_res
 
-    def ef_entry_memo(self, e, f, k=None, p_val=None, x_val=None):
-        return memorize(self.dict_ef_entry, (e, f), self.ef_entry_val, (e, f, k, p_val, x_val), on=self.memo)
+    def ef_entry_memo(self, e, f, k_val=None, p_val=None, x_val=None):
+        return memorize(self.dict_ef_entry, (e, f, k_val, p_val, x_val), self.ef_entry_val, (e, f, k_val, p_val, x_val), on=self.memo)
 
-    def X_coeff(self, k=None, p_val=None, x_val=None):
+    def valuefy(self, expr, symbols, vals):
+        if 'sympy' in str(type(expr)):
+            myf = lambdify(symbols, expr, modules=self.mods)
+            return myf(*vals)
+        else:
+            return expr
+
+    def X_coeff(self, k_val=None, p_val=None, x_val=None):
+        g = self.g
         coeff = {}
         for e in self.g.edges():
             val = 0
             for f in self.g.edges():
                 py = float(g.edges[f]['y'])
-                val += py * self.ef_entry_memo(e, f, k, p_val, x_val)
-            coeff[e] = val
+                val += py * self.ef_entry_val(e, f, k_val, p_val, x_val)
+                #val += py * self.ef_entry_memo(e, f, k_val, p_val, x_val)
+            coeff[e] = self.valuefy(val, (p, x), (p_val, x_val))
         return coeff
 
-    def Y_coeff(self, k=None, p_val=None, x_val=None):
+    def Y_coeff(self, k_val=None, p_val=None, x_val=None):
+        g = self.g
         coeff = {}
         for f in self.g.edges():
             val = 0
             for e in self.g.edges():
                 px = float(g.edges[e]['x'])
-                val += px * self.ef_entry_memo(e, f, k, p_val, x_val)
-            coeff[f] = val
+                val += px * self.ef_entry_val(e, f, k_val, p_val, x_val)
+                #val += px * self.ef_entry_memo(e, f, k_val, p_val, x_val)
+            coeff[f] = self.valuefy(val, (p, x), (p_val, x_val))
+        return coeff
+
+    def Y_coeff_condi(self, e, p_val, k_val=None, x_val=None):
+        g = self.g
+        coeff = {}
+        for f in self.g.edges():
+            val = self.ef_entry_val(e, f, k_val, p_val, x_val)
+            coeff[f] = self.valuefy(val, (x,), (x_val,))
+            #coeff[f] = self.ef_entry_memo(e, f, k_val, p_val, x_val)
         return coeff
 
     def cond_region(self, k=None, e=None, p_val=None, x_val=None, show=True):
@@ -198,7 +219,7 @@ class Formula:
         return res
     
     # combine results in e,f level
-    def ef_coeff(self, px, py, lf):
+    def ef_coeff(self, lf):
         if self.stat == Stats.MOMENT:
             coeff = 1
         elif self.stat == Stats.CDF:
@@ -495,6 +516,18 @@ class Numeric:
         # gen formula
         self.fm = fl_cls(g, False, memorize=memorize)
 
+    # return coeff
+    def X_coeff(self, k_val=None, p_val=None, x_val=None):
+        return self.fm.X_coeff(k_val, p_val, x_val)
+
+    # return coeff
+    def Y_coeff(self, k_val=None, p_val=None, x_val=None):
+        return self.fm.Y_coeff(k_val, p_val, x_val)
+
+    # return coeff
+    def Y_coeff_condi(self, e, p_val, k_val=None, x_val=None):
+        return self.fm.Y_coeff(k_val, p_val, x_val)
+
     # evaluate value
     def eval(self, *params, save=True):
         fm = self.fm
@@ -615,6 +648,18 @@ class Symbolic:
         if save:
             fm.save_res(params, res)
         return res
+
+    # return coeff
+    def X_coeff(self, k_val=None, p_val=None, x_val=None):
+        return self.fm.X_coeff(k_val, p_val, x_val)
+
+    # return coeff
+    def Y_coeff(self, k_val=None, p_val=None, x_val=None):
+        return self.fm.Y_coeff(k_val, p_val, x_val)
+
+    # return coeff
+    def Y_coeff_condi(self, e, p_val, k_val=None, x_val=None):
+        return self.fm.Y_coeff(k_val, p_val, x_val)
 
     # make sublist
     def make_sub_lst(self, v_dict):
