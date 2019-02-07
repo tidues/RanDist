@@ -63,10 +63,10 @@ fls = rt.Formulas(gname, phi)                 # create a formulas object
 
 moment = fls.get_formula(rt.Stats.MOMENT)     # get a moment formula object
 cdf = fls.get_formula(rt.Stats.CDF)           # get a cdf formula object
-pdf = fls.get_formula(rt.Stats.PDF)           # get a cdf formula object
-cmoment = fls.get_formula(rt.Stats.MOMENT)    # get a moment formula object
-ccdf = fls.get_formula(rt.Stats.CCDF)         # get a cdf formula object
-cpdf = fls.get_formula(rt.Stats.CPDF)         # get a cdf formula object
+pdf = fls.get_formula(rt.Stats.PDF)           # get a pdf formula object
+cmoment = fls.get_formula(rt.Stats.CMOMENT)    # get a conditional moment formula object
+ccdf = fls.get_formula(rt.Stats.CCDF)         # get a conditional cdf formula object
+cpdf = fls.get_formula(rt.Stats.CPDF)         # get a conditional pdf formula object
 
 moment.eval(3)                        # computing the 3rd order moment
 moment.eval(2) - moment.eval(1) ** 2  # compute the variance
@@ -107,7 +107,7 @@ each parameter is explained below:
 1. Symbolic formula object is slow in generating the formula, but fast in evaluating values once the formula has been generated.
 2. Symbolic formula object has two more methods that numerical formulas do not have, `formula()` which shows the closed-form formula for the corresponding statistics, and `save_formula()` that saves the generated formula into file, so that users can load it by the function `load_formulas` in the future without generating the formulas from scratch again.
 3. Symbolic formula is faster in plotting.
-4. One drawback is that the speed of symbolic formulas are getting much more slower when the size of the graph increase.
+4. One drawback is that the speed of symbolic formulas are getting much more slower when the size of the graph increases.
 5. Numeric formulas are fast in evaluating a single value. And it performs much faster than symbolic formulas in both plotting and evaluation when graph is large.
 
 Basically, if the network is large, always use numeric formulas. Otherwise, please use the default setting, especially if you want to reuse the formulas in the future.
