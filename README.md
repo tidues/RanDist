@@ -118,19 +118,19 @@ Basically, if the network is large, always use numeric formulas. Otherwise, plea
 #### The `Formula` Object
 The main methods of formula objects are:
 1. `eval(*params, save=True)`: give corresponding parameters to evaluate the value. The required parameters are
-   1. Moments: `k`, the order of moment.
-   2. CDF: `x`, the distance.
-   3. PDF: `x`, the distance.
-   4. Conditional Moments: `k`; `e`, the edge conditioning on; `p`, the relative location conditioning on.
-   5. Conditional CDF: `e`, `p`, `x`.
-   6. Conditional PDF: `e`, `p`, `x`.
+   * Moments: `k`, the order of moment.
+   * CDF: `x`, the distance.
+   * PDF: `x`, the distance.
+   * Conditional Moments: `k`; `e`, the edge conditioning on; `p`, the relative location conditioning on.
+   * Conditional CDF: `e`, `p`, `x`.
+   * Conditional PDF: `e`, `p`, `x`.
 2. `plot(*params, step=0.01, save=True, show=False)`: plotting the formula. The required parameters are
-  1. Moments: cannot plot.
-  2. CDF: no required input.
-  3. PDF: no required input.
-  4. Conditional Moments: `k`, `e`. Plotting over `p`.
-  5. Conditional CDF: `e`, `p`.
-  6. Conditional PDF: `e`, `p`.
+   * Moments: cannot plot.
+   * CDF: no required input.
+   * PDF: no required input.
+   * Conditional Moments: `k`, `e`. Plotting over `p`.
+   * Conditional CDF: `e`, `p`.
+   * Conditional PDF: `e`, `p`.
 3. `X_coeff(k_val=None, p_val=None, x_val=None)`: consider the formula as a function of the pmf of `X`, retrieve the coeffecients. Return a dictionary indexed by the edges.
 4. `Y_coeff(k_val=None, p_val=None, x_val=None)`: consider the formula as a function of the pmf of `Y`, retrieve the coeffecients. Return a dictionary indexed by the edges.
 
