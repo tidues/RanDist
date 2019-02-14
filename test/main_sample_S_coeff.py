@@ -47,7 +47,7 @@ valLst = [-0.1, -0.01, -0.001, 0, 1, 2, 3, -1, 9, 9.5, 9.9, 10]
 # moments stats
 if switches[Stats.MOMENT] == 1:
     moment = fls.get_formula(Stats.MOMENT, symbolic=True)
-    vals = [0, 1, 2, 3]
+    vals = [0, 1, 2]
     for v in vals:
         #print(moment.eval(v))
         print(moment.X_coeff(k_val=v))

@@ -1,7 +1,8 @@
 # Distance between Random Events
 
-This package is for symbolically and numerically calculating the arbitrary order moments, pdf, cdf and their conditional counterparts of the distance between two random events in a given graph. The position of an event in a network is encoded in a tuple `(e, p)`, where `e={u,v}` (assume `u < v`) is the edge where the event happens and `p` is the relative location of the event on that edge, that is the length of the segment from `u` (the vertex with small index) to the location of the event divided by the length of the edge `e`. Since both events are random, we use `(X, P)` and `(Y, Q)` to denote both events respectively.
+This package is mainly for symbolically and numerically calculating the arbitrary order moments, pdf, cdf and their conditional counterparts of the distance between two random events in a given graph. The position of an event in a network is encoded in a tuple `(e, p)`, where `e={u,v}` (assume `u < v`) is the edge where the event happens and `p` is the relative location of the event on that edge, that is the length of the segment from `u` (the vertex with small index) to the location of the event divided by the length of the edge `e`. Since both events are random, we use `(X, P)` and `(Y, Q)` to denote both events respectively.
 
+These formulas can be easily embedded in optimization models. If consider the pmf of `X` and `Y` as decision variables, it can be shown that all these formulas are linear functions in these variables. User can use the formula methods `X_coeff` and `Y_coeff` to retrieve the corresponding coefficients.
 
 ## Installation
 
@@ -95,13 +96,15 @@ each parameter is explained below:
 * d_jit: compute the shortest path length between pair of vertices in a `Just In Time` fashion. Set this to `True` if the input graph is very large and only conditional statistics are needed.
 * memorize: use memorization to speedup the computation. Set this to `False` only if the input graph is too large so that the memories in the computer are not enough.
 
-#### The `get_formula` Function
+#### The `get_formula` Method
 ```
 get_formula(stats, symbolic=None)
 ```
 each parameter is explained below:
 1. stats: specify which type of formulas you want, all types are in the enum type Stats.
 2. symbolic: calculate values numerically or symbolically. The default value `None` means auto, so moments and conditional moments will be calculated numerically, and all the rest are calculated symbolically.
+
+This method will return a formula object.
 
 #### Comparison between Numeric and Symbolic Formulas
 1. Symbolic formula object is slow in generating the formula, but fast in evaluating values once the formula has been generated.
@@ -111,6 +114,30 @@ each parameter is explained below:
 5. Numeric formulas are fast in evaluating a single value. And it performs much faster than symbolic formulas in both plotting and evaluation when graph is large.
 
 Basically, if the network is large, always use numeric formulas. Otherwise, please use the default setting, especially if you want to reuse the formulas in the future.
+
+#### The `Formula` Object
+The main methods of formula objects are:
+1. `eval(*params, save=True)`: give corresponding parameters to evaluate the value. The required parameters are
+  1. Moments: `k`, the order of moment.
+  2. CDF: `x`, the distance.
+  3. PDF: `x`, the distance.
+  4. Conditional Moments: `k`; `e`, the edge conditioning on; `p`, the relative location conditioning on.
+  5. Conditional CDF: `e`, `p`, `x`.
+  6. Conditional PDF: `e`, `p`, `x`.
+2. `plot(*params, step=0.01, save=True, show=False)`: plotting the formula. The required parameters are
+  1. Moments: cannot plot.
+  2. CDF: no required input.
+  3. PDF: no required input.
+  4. Conditional Moments: `k`, `e`. Plotting over `p`.
+  5. Conditional CDF: `e`, `p`.
+  6. Conditional PDF: `e`, `p`.
+3. `X_coeff(k_val=None, p_val=None, x_val=None)`: consider the formula as a function of the pmf of `X`, retrieve the coeffecients. Return a dictionary indexed by the edges.
+4. `Y_coeff(k_val=None, p_val=None, x_val=None)`: consider the formula as a function of the pmf of `Y`, retrieve the coeffecients. Return a dictionary indexed by the edges.
+
+Unique methods for symbolic formula objects:
+1. formula(self, *params): return the closed form formula. Same required parameters as the plot method.
+2. save_formula(): save the formulas in a hidden folder under current working directory. Can use the function `load_formulas()` to reload these formulas next time without reading the original graph.
+
 
 ### Interface 2: `data_collector` Function
 Basically, the function `data_collector` is a wrapper of the `Formulas` class. We will demonstrate the usage with an example.
