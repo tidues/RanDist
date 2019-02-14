@@ -175,3 +175,4 @@ rt.data_collector(gname, phi, mmtp, cdfp, pdfp, cmmtp, ccdfp, cpdfp, d_jit=d_jit
 ## Future Plan
 1. Remove the current restrictions mentioned before about `X` and `Y`, and ![alt text](https://latex.codecogs.com/gif.latex?\Phi_\scriptscriptstyle{P,Q}(p,q)).
 2. Interactive user interface.
+3. The running speed right now is decent for common graph. Further speed improvement can be done by rewriting core functions in C.
