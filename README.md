@@ -135,8 +135,8 @@ The main methods of formula objects are:
 4. `Y_coeff(k_val=None, p_val=None, x_val=None)`: consider the formula as a function of the pmf of `Y`, retrieve the coeffecients. Return a dictionary indexed by the edges.
 
 Unique methods for symbolic formula objects:
-1. formula(self, *params): return the closed form formula. Same required parameters as the plot method.
-2. save_formula(): save the formulas in a hidden folder under current working directory. Can use the function `load_formulas()` to reload these formulas next time without reading the original graph.
+1. `formula(self, *params)`: return the closed form formula. Same required parameters as the plot method.
+2. `save_formula()`: save the formulas in a hidden folder under current working directory. Can use the function `load_formulas()` to reload these formulas next time without reading the original graph.
 
 
 ### Interface 2: `data_collector` Function
