@@ -3,14 +3,14 @@ from sympy.abc import p, q
 
 # module test switch
 switches = {
-        'test': 0,
+        'test': 1,
         'cycuni': 0,
         'cycnuni': 0,
         'clinuni': 0,
         'griduni': 0,
         'gridnuni': 0,
         'manhattonCondi': 0,
-        'manhattonUncondi': 1
+        'manhattonUncondi': 0
         }
 
 Stats = rt.Stats
@@ -25,18 +25,27 @@ if switches['test'] == 1:
     loc3 = (('3', '4'), 0)
     locs = [loc1, loc2, loc3]
 
+    xs = [3, 5, 8]
+    locx1 = list(loc1) + [xs[1]]
+    locx2 = list(loc2) + [xs[1]]
+    locxs = [locx1, locx2]
+
     mmtp = {'collect': True, 'symbolic': None, 'valst': ks}
     cdfp = {'collect': True, 'symbolic': None}
+    cdfe = {'collect': True, 'symbolic': None, 'valst': xs}
     pdfp = {'collect': True, 'symbolic': None}
+    pdfe = {'collect': True, 'symbolic': None, 'valst': xs}
     cmmtp ={'collect': True, 'symbolic': None, 'valst': (ks, locs)}
     ccdfp = {'collect': True, 'symbolic': None, 'valst': locs}
+    ccdfe = {'collect': True, 'symbolic': None, 'valst': locxs}
     cpdfp = {'collect': True, 'symbolic': False, 'valst': locs}
+    cpdfe = {'collect': True, 'symbolic': False, 'valst': locxs}
 
     d_jit = False
     memorize = True
 
     # collect data
-    rt.data_collector(gname, phi, mmtp, cdfp, pdfp, cmmtp, ccdfp, cpdfp, d_jit=d_jit, memorize=memorize)
+    rt.data_collector(gname, phi, mmtp, cdfp, cdfe, pdfp, pdfe, cmmtp, ccdfp, ccdfe, cpdfp, cpdfe, d_jit=d_jit, memorize=memorize)
 
 if switches['cycuni'] == 1:
     # collection params
