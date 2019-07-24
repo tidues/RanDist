@@ -32,6 +32,8 @@ def plot1d(func, lb, ub, step, stop_val=None, stop_iter=50, svname='', show=Fals
         plt.show()
     plt.close(fig)
 
+    return len(x)
+
 #def find_ub(func, lb, step, lim, nochange_iter=6, eps=1e-6):
 #    ub = lb
 #    power = 0

@@ -251,10 +251,15 @@ class Formula:
         return coeff
 
     # save result when evaluate
-    def save_res(self, keys, res):
+    def save_res(self, keys, res, time):
         g = self.g
         fname = self.resfolder + g.name + '_' + g.phi.name + '_' + str(self.stat) + '.dat'
-        val = str(keys) + '\t' + str(res) + '\n'
+
+        val = str(keys) + '\t' + str(res)
+        if time >= 0:
+            val += '\t' + str(time)
+        val += '\n'
+
         ew.wFile(fname, val)
 
     # make save name
@@ -529,12 +534,22 @@ class Numeric:
         return self.fm.Y_coeff(k_val, p_val, x_val)
 
     # evaluate value
-    def eval(self, *params, save=True):
+    def eval(self, *params, save=True, timing=False):
+        tm = -1
+        if timing: 
+            timer = Timer()
+            timer.start()
+
         fm = self.fm
         p_dict, v_dict, keys, vals = fm.make_params(*params)
         res = fm.cond_region(**p_dict)
+
+        if timing:
+            timer.stop()
+            tm = timer.t
+
         if save:
-            fm.save_res(params, res)
+            fm.save_res(params, res, tm)
         return res
 
     # numerical plot
@@ -577,9 +592,11 @@ class Numeric:
         if save:
             g = fm.g
             figname = fm.resfolder + g.name + '_' + g.phi.name + '_' + str(fm.stat) + '_' + str(params) + '.png'
-            plot1d(f_lambda, lb, ub, step, svname=figname, show=show, stop_val=fm.stop_val, adaptive=adaptive)
+            pnts1 = plot1d(f_lambda, lb, ub, step, svname=figname, show=show, stop_val=fm.stop_val, adaptive=adaptive)
         else:
-            plot1d(f_lambda, lb, ub, step, show=show, stop_val=fm.stop_val, adaptive=adaptive)
+            pnts1 = plot1d(f_lambda, lb, ub, step, show=show, stop_val=fm.stop_val, adaptive=adaptive)
+
+        return pnts1
 
 
 # the interface for symbolic computation
@@ -633,20 +650,33 @@ class Symbolic:
         if save:
             g = fm.g
             figname = fm.resfolder + g.name + '_' + g.phi.name + '_' + str(fm.stat) + '_' + str(params) + '.png'
-            plot1d(f_lambda, lb, ub, step, svname=figname, show=show)
+            pnts1 = plot1d(f_lambda, lb, ub, step, svname=figname, show=show)
         else:
-            plot1d(f_lambda, lb, ub, step, show=show)
+            pnts1 = plot1d(f_lambda, lb, ub, step, show=show)
+
+        return pnts1
 
     # evaluate value
-    def eval(self, *params, save=True):
+    def eval(self, *params, save=True, timing=False):
+
+        tm = -1
+        if timing: 
+            timer = Timer()
+            timer.start()
+
         fm = self.fm
         v_dict, keys, vals, f, N_f = self.gen_formula(*params)
         if len(vals) == 0:
             res = N_f
         else:
             res = N_f(*vals)
+
+        if timing:
+            timer.stop()
+            tm = timer.t
+
         if save:
-            fm.save_res(params, res)
+            fm.save_res(params, res, tm)
         return res
 
     # return coeff

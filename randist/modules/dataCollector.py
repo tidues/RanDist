@@ -4,14 +4,14 @@ from .enums import Stats
 # info_dict keys and values
 # moment: ks; cdf: nothing; pdf: nothing;
 # cmoment: (ks, locs); ccdf: locs; cpdf: locs
-def data_collector(gname, phi, mmtp=False, cdfp=False, pdfp=False, cmmtp=False, ccdfp=False, cpdfp=False, d_jit=False, memorize=True):
+def data_collector(gname, phi, mmtp=False, cdfp=False, pdfp=False, cmmtp=False, ccdfp=False, cpdfp=False, d_jit=False, memorize=True, timer=False):
     fls = Formulas(gname, phi, d_jit=d_jit, memorize=memorize)
 
     # moments
     if mmtp is not False and mmtp['collect']:
         moment = fls.get_formula(Stats.MOMENT, symbolic=mmtp['symbolic'])
         for k in mmtp['valst']:
-            moment.eval(k)
+            moment.eval(k, timing=True)
 
     # cdf
     if cdfp is not False and cdfp['collect']:
@@ -32,7 +32,7 @@ def data_collector(gname, phi, mmtp=False, cdfp=False, pdfp=False, cmmtp=False, 
         cmoment = fls.get_formula(Stats.CMOMENT, symbolic=cmmtp['symbolic'])
         for k in cmmtp['valst'][0]:
             for loc in cmmtp['valst'][1]:
-                cmoment.eval(k, *loc)
+                cmoment.eval(k, *loc, timing=True)
 
     # ccdf
     if ccdfp is not False and ccdfp['collect']:

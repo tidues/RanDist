@@ -4,7 +4,7 @@ from .enums import Stats
 # info_dict keys and values
 # moment: ks; cdf: nothing; pdf: nothing;
 # cmoment: (ks, locs); ccdf: locs; cpdf: locs
-def data_collector(gname, phi, mmtp=False, cdfp=False, pdfp=False, cmmtp=False, ccdfp=False, cpdfp=False, d_jit=False, memorize=True):
+def data_collector(gname, phi, mmtp=False, cdfp=False, pdfp=False, cmmtp=False, ccdfp=False, cpdfp=False, d_jit=False, memorize=True, timer=False):
     fls = Formulas(gname, phi, d_jit=d_jit, memorize=memorize)
 
     # moments

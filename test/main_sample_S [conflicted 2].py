@@ -49,7 +49,7 @@ if switches[Stats.MOMENT] == 1:
     moment = fls.get_formula(Stats.MOMENT, symbolic=True)
     vals = [0, 1, 2]
     for v in vals:
-        print(moment.eval(v))
+        print(moment.eval(v, timing=True))
 
 # cdf stats
 if switches[Stats.CDF] == 1:
@@ -83,7 +83,7 @@ if switches[Stats.CMOMENT] == 1:
     for k in ks:
         for e in es:
             for p in ps:
-                print(cmoment.eval(k, e, p))
+                print(cmoment.eval(k, e, p, timing=True))
 
     cmoment.plot(0, ('1', '2'), show=False)
     cmoment.plot(1, ('1', '2'), show=False)
