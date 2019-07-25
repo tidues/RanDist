@@ -23,7 +23,7 @@ def data_collector(gname, phi, mmtp=False, cdfp=False, cdfe=False, pdfp=False, p
 
     # cdfe
     if cdfe is not False and cdfe['collect']:
-        cdf = fls.get_formula(Stats.CDF, symbolic=cdfp['symbolic'])
+        cdf = fls.get_formula(Stats.CDF, symbolic=cdfe['symbolic'])
         for x in cdfe['valst']:
             cdf.eval(x, timing=timing)
         if cdfe['symbolic']:
@@ -38,7 +38,7 @@ def data_collector(gname, phi, mmtp=False, cdfp=False, cdfe=False, pdfp=False, p
 
     # pdf
     if pdfe is not False and pdfe['collect']:
-        pdf = fls.get_formula(Stats.PDF, symbolic=pdfp['symbolic'])
+        pdf = fls.get_formula(Stats.PDF, symbolic=pdfe['symbolic'])
         for x in pdfe['valst']:
             pdf.eval(x, timing=timing)
         if pdfe['symbolic']:
@@ -61,7 +61,7 @@ def data_collector(gname, phi, mmtp=False, cdfp=False, cdfe=False, pdfp=False, p
 
     # ccdfe
     if ccdfe is not False and ccdfe['collect']:
-        ccdf = fls.get_formula(Stats.CCDF, symbolic=ccdfp['symbolic'])
+        ccdf = fls.get_formula(Stats.CCDF, symbolic=ccdfe['symbolic'])
         for locx in ccdfe['valst']:
             ccdf.eval(*locx, timing=timing)
         if ccdfe['symbolic']:
@@ -77,7 +77,7 @@ def data_collector(gname, phi, mmtp=False, cdfp=False, cdfe=False, pdfp=False, p
 
     # cpdfe
     if cpdfe is not False and cpdfe['collect']:
-        cpdf = fls.get_formula(Stats.CPDF, symbolic=cpdfp['symbolic'])
+        cpdf = fls.get_formula(Stats.CPDF, symbolic=cpdfe['symbolic'])
         for locx in cpdfe['valst']:
             cpdf.eval(*locx, timing=timing)
         if cpdfe['symbolic']:
