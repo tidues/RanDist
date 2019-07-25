@@ -24,7 +24,12 @@ class Phi:
             raise Exception('input phi does not integrate to one')
         
     def __gen_phi(self):
-        if self.phi_p_S is not None and self.phi_q_S is not None:
+        if self.phi_p_S is not None and self.phi_q_S is not None and self.phi_pq_S is not None:
+            self.phi_p_S = simplify(self.phi_p_S)
+            self.phi_q_S = simplify(self.phi_q_S)
+            self.phi_pq_S = simplify(self.phi_pq_S)
+            self.phi_qcp_S = self.phi_q_S
+        elif self.phi_p_S is not None and self.phi_q_S is not None:
             # self.phi_p_S = sympify(self.phi_p_S)
             # self.phi_q_S = sympify(self.phi_q_S)
             self.phi_p_S = simplify(self.phi_p_S)
