@@ -32,7 +32,7 @@ def theta(a, b, x):
         return x
 
 # numerical integration with an input expression from sympy
-def N_int(expr, range1, range2=None):
+def N_int(expr, range1, range2=None, eps=1.0e-4):
     mods = ['numpy', {'theta': theta, 'eta': eta, 'etal': etal, 'etar': etar, 'mmin': min, 'mmax': max}]
 
     x = range1[0]
@@ -54,7 +54,7 @@ def N_int(expr, range1, range2=None):
 
     f = lambdify(var, expr, modules=mods)
 
-    return int_func(f, *region)
+    return int_func(f, *region, epsabs=eps, epsrel=eps)
 
 # check if input expression is a valid pdf 
 # can only verify the integral as 1

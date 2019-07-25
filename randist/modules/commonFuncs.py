@@ -6,7 +6,7 @@ from sympy.abc import a, b, x
 import dill
 import networkx as nx
 from networkx import is_connected
-from scipy.integrate import dblquad
+#from scipy.integrate import dblquad
 
 # symbolic gate function
 #eta = lambda a, b, x: Piecewise((1, (x >= a) & (x <= b)), (0, True))

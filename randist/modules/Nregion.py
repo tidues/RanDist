@@ -4,13 +4,14 @@ import math
 
 # basic components of a region
 class RegionBase:
-    def __init__(self, pl, pu, ql, qu, xval, bd=(True, True)):
+    def __init__(self, pl, pu, ql, qu, xval, bd=(True, True), eps=1.0e-3):
         self.pl = pl
         self.pu = pu
         self.ql = ql
         self.qu = qu
         self.xval = xval # is x if it is a region function; or upper bound if is a region
         self.bd = bd
+        self.eps = eps
         # self.modules = ['numpy']
 
     # the mass function
@@ -22,7 +23,7 @@ class RegionBase:
             int_func = dblquad
             region = (self.pl, self.pu, self.ql, self.qu)
 
-        return int_func(func, *region)[0]
+        return int_func(func, *region, epsabs=self.eps, epsrel=self.eps)[0]
 
     # conditional mass function
     def m_p(self, f, p_val):
@@ -36,7 +37,7 @@ class RegionBase:
 
         etaval = myeta(self.pl, self.pu, p_val)
         if etaval != 0:
-            return quad(f, self.ql(p_val), self.qu(p_val))[0]
+            return quad(f, self.ql(p_val), self.qu(p_val), epsabs=self.eps, epsrel=self.eps)[0]
         else:
             return 0
 
