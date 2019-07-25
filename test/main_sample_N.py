@@ -20,9 +20,23 @@ show_plot = False
 gname = 'g0'
 
 #phi_pq = 4 * p * q
-phi_pq = 6 * q * (1 - q)
+#phi_pq = 6 * q * (1 - q)
 #phi_pq = 1
-phi = rt.Phi('betaq', phi_pq=phi_pq)
+
+def pdfpq(p,q):
+    if p >= 0 and p <= 1 and q >=0 and q <= 1:
+        return 1
+    else:
+        return 0
+
+def pdfuni(p):
+    if p >= 0 and p <= 1:
+        return 1
+    else:
+        return 0
+
+#phi = rt.Phi('betaq', phi_pq=phi_pq)
+phi = rt.Phi('numeric', phi_pq=pdfpq, phi_p=pdfuni, phi_q=pdfuni, symbolic=False)
 
 fls = rt.Formulas(gname, phi, memorize=True)
 

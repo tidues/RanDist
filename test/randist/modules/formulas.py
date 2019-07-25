@@ -744,6 +744,7 @@ class Formulas:
     def __init__(self, gname, phi, fpath='./data/', rational=False, d_jit=False, memorize=True):
         self.d_jit = d_jit
         self.memo = memorize
+        self.allowSym = phi.symbolic
         # read graph
         self.g = bi.readGraph(fpath, gname)
         # generate basic info
@@ -777,6 +778,9 @@ class Formulas:
                 symbolic = True
 
         if symbolic:
-            return Symbolic(g, self.fl[stats], self.memo)
+            if self.allowSym:
+                return Symbolic(g, self.fl[stats], self.memo)
+            else:
+                raise Exception("The input distribution phi is numerical, no symbolic methods allowed. Please change the phi object to symbolic, or use only numerical methods.")
         else:
             return Numeric(g, self.fl[stats], self.memo)

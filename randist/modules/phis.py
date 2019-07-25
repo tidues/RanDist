@@ -6,12 +6,13 @@ from scipy.integrate import dblquad
 class Phi:
     def __init__(self, name, phi_pq=None, phi_p=None, phi_q=None, symbolic=True, eps=1e-7):
         self.name = name
+        self.eps = eps
+        self.symbolic = symbolic
 
         if symbolic:
             self.phi_pq_S = phi_pq
             self.phi_p_S = phi_p
             self.phi_q_S = phi_q
-            self.eps = eps
             self.__gen_phi()
         else:
             self.phi_p_N = lambda p: phi_p(p)
