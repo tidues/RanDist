@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="randist",
-    version="1.1.6",
+    version="1.1.7",
     author="Ningji Wei",
     author_email="tidues@gmail.com",
     description="Distance statistics for two random events on a network",
